@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+// Using UseStates and localStorage here... 
+
 const App = () => {
 
   const [color, setcolor] = useState( localStorage.getItem("color") || "olive")
