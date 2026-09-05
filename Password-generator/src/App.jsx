@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useCallback } from 'react'
 import { useState } from 'react'
 
@@ -8,6 +8,10 @@ const App = () => {
   const [NumberAllowed, setNumberAllowed] = useState(false)
   const [CharAllowed, setCharAllowed] = useState(false)
   const [password, setpassword] = useState("")
+  const [copied, setCopied] = useState(false);
+
+  //Use ref hook
+  const passwordRef = useRef(null)
 
   const passwordGenerator = useCallback(() => {
       let pass = ""
@@ -26,6 +30,17 @@ const App = () => {
 
     }, [length, NumberAllowed, CharAllowed, setpassword]
   )
+
+  const copyPasswordtoClipboard = useCallback(() => {
+    passwordRef.current?.select();
+    window.navigator.clipboard.writeText(password)
+    setCopied(true);
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+  }, [password])
+
   
   useEffect(() => {
     passwordGenerator()
@@ -46,10 +61,13 @@ const App = () => {
           className='outline-none w-full py-1 px-3 bg-white text-black'
           placeholder='Password'
           readOnly
+          ref={passwordRef}
         />
         <button 
-        className='outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0'
-        >Copy </button>
+        onClick={copyPasswordtoClipboard}
+        className={`outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0 hover:cursor-pointer transition-colors duration-200 ${copied ? "bg-blue-950" : "bg-blue-700"}`}
+        >{copied ? "Copied!" : "Copy"}
+</button>
       </div>
 
       <div className='flex text-sm gap-x-2'>
